@@ -11,7 +11,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "path",
         nargs="?",
-        default="data/raw/posture_csi/kyphosis/cyd-k01.dat",
+        default="data/kyphosis/cyd-k01.dat",
         help="Path to an Intel 5300 .dat CSI file.",
     )
     parser.add_argument("--scaled", action="store_true", help="Use CSIKit scaled CSI values.")

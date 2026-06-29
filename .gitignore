@@ -28,6 +28,7 @@ build/
 # Research data and generated artifacts
 data/**
 !data/.gitkeep
+!data/README.md
 outputs/**
 !outputs/.gitkeep
 artifacts/**
