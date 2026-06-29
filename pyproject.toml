@@ -5,9 +5,10 @@ description = "WiFi CSI based spine detection research project."
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
+    "csikit>=2.5",
     "h5py>=3.14.0",
     "matplotlib>=3.10.0",
-    "numpy>=2.0.0",
+    "numpy>=1.26,<2",
     "pandas>=2.2.0",
     "pywavelets>=1.8.0",
     "scikit-learn>=1.6.0",
