@@ -1,0 +1,67 @@
+# Python bytecode and caches
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.pyre/
+.coverage
+htmlcov/
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# uv / packaging
+dist/
+build/
+*.egg-info/
+
+# Keep uv.lock tracked for reproducible environments.
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Research data and generated artifacts
+data/**
+!data/.gitkeep
+outputs/**
+!outputs/.gitkeep
+artifacts/**
+!artifacts/.gitkeep
+models/**
+!models/.gitkeep
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# LaTeX build outputs in papers/
+papers/**/*.aux
+papers/**/*.bbl
+papers/**/*.bcf
+papers/**/*.blg
+papers/**/*.fdb_latexmk
+papers/**/*.fls
+papers/**/*.log
+papers/**/*.out
+papers/**/*.run.xml
+papers/**/*.synctex.gz
+papers/**/*.thm
+papers/**/*.toc
+papers/**/*.xdv
+papers/**/*.nav
+papers/**/*.snm
+papers/**/*.vrb
+papers/**/*.lof
+papers/**/*.lot
+papers/**/*.lol
+papers/**/missfont.log
+
+# Emacs/AUCTeX generated files under papers/
+papers/**/auto/
