@@ -33,6 +33,12 @@ Run a fuller experiment:
 uv run python scripts/train_tcn.py --epochs 30 --window-size 512 --stride 256 --output-dir outputs/tcn_phase_ratio
 ```
 
+Evaluate an existing trained model without retraining:
+
+```powershell
+uv run python scripts/evaluate_tcn.py --model-dir outputs/tcn_phase_ratio --split test
+```
+
 Outputs include:
 
 - `best_model.pt`: best validation checkpoint.
