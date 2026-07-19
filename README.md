@@ -13,36 +13,30 @@ uv run pytest
 
 Put raw and processed experiment data under `data/`; those files are ignored by git by default.
 
-## Train TCN classifier
+## File-level classifier
 
-The first training pipeline uses antenna phase-ratio CSI features:
+The classifier uses antenna phase-ratio CSI features:
 
 ```text
 angle(H_rx / H_reference_rx)
 ```
 
-Run a quick smoke test:
+Each recording is summarized into robust file-level statistics and classified by ExtraTrees.
+Train and evaluate the model with:
 
 ```powershell
-uv run python scripts/train_tcn.py --max-files-per-class 4 --max-windows-per-file 1 --window-size 128 --stride 128 --epochs 1 --output-dir outputs/tcn_smoke
+uv run python scripts/train_file_classifier.py --output-dir outputs/file_phase_ratio
+uv run python scripts/evaluate_file_classifier.py --model-dir outputs/file_phase_ratio --split test
 ```
 
-Run a fuller experiment:
-
-```powershell
-uv run python scripts/train_tcn.py --epochs 30 --window-size 512 --stride 256 --output-dir outputs/tcn_phase_ratio
-```
-
-Evaluate an existing trained model without retraining:
-
-```powershell
-uv run python scripts/evaluate_tcn.py --model-dir outputs/tcn_phase_ratio --split test
-```
+This evaluation keeps every source file wholly within one split, so overlapping windows from the
+same recording cannot leak across train and test. It assumes each subject is represented in the
+training set. Use a subject-held-out evaluation before claiming performance on unseen people.
 
 Outputs include:
 
-- `best_model.pt`: best validation checkpoint.
-- `metrics.json`: train/validation history, test report, confusion matrix, and split metadata.
-- `normalization.npz`: feature normalization statistics.
+- `model.joblib`: trained ExtraTrees classifier.
+- `metrics.json`: train, validation, and test reports plus split metadata.
+- `evaluation_test.json`: independently generated evaluation report.
 
 Preprocessed windows are cached under `artifacts/phase_ratio_windows/` by default.

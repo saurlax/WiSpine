@@ -116,3 +116,31 @@ def make_windows(
         windows = windows[:max_windows]
 
     return np.asarray(windows, dtype=np.float32)
+
+
+def summarize_phase_ratio_windows(windows: np.ndarray) -> np.ndarray:
+    """Summarize all windows from one CSI file into robust file-level features."""
+    if windows.ndim != 3:
+        raise ValueError(
+            f"Expected windows shaped windows x time x features, got {windows.shape}."
+        )
+    if windows.shape[0] == 0 or windows.shape[1] == 0:
+        raise ValueError("At least one non-empty window is required.")
+
+    values = windows.reshape(-1, windows.shape[-1])
+    differences = np.diff(windows, axis=1).reshape(-1, windows.shape[-1])
+    if differences.shape[0] == 0:
+        differences = np.zeros_like(values[:1])
+
+    statistics = (
+        values.mean(axis=0),
+        values.std(axis=0),
+        np.quantile(values, 0.1, axis=0),
+        np.quantile(values, 0.5, axis=0),
+        np.quantile(values, 0.9, axis=0),
+        np.abs(differences).mean(axis=0),
+        differences.std(axis=0),
+        np.sin(values).mean(axis=0),
+        np.cos(values).mean(axis=0),
+    )
+    return np.concatenate(statistics).astype(np.float32)
