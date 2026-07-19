@@ -1,62 +1,40 @@
-% !TEX TS-program = XeLaTeX
+﻿% !TEX TS-program = XeLaTeX
 % !TEX encoding = UTF-8 Unicode
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-% 
-%	大连理工大学博士论文 XeLaTeX 模版 —— 格式文件 format.tex
-%	版本：0.1beta1
-%	最后更新：2018.5.23
-%	修改者：王天宇 (E-mail: heavenlykingwty@gmail.com)
-%	编译环境：macOS MacTex XeLatex (Texpad)
-% 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-
-
 \cdegree{\makebox[13.25cm][s]{大连理工大学本科毕业设计（论文）}}
-\ctitle{大连理工大学本科毕业设计（论文）题目}
-\etitle{The Subject of Undergraduate Graduation Project (Thesis) of DUT}
+\ctitle{基于 WiFi CSI 的脊柱姿态检测方法研究}
+\etitle{Research on Spinal Posture Detection Based on WiFi CSI}
 
-% 根据需要添加字符间距
-\department{\makebox[6.1cm][c]{软件学院}}   
-\csubject{\makebox[6.1cm][c]{软件工程}}
-\cauthor{\makebox[6.1cm][c]{李某}}
-\cauthorno{\makebox[6.1cm][c]{201990000}}
+\department{\makebox[6.1cm][c]{软件学院}}
+\csubject{\makebox[6.1cm][c]{网络工程}}
+\cauthor{\makebox[6.1cm][c]{路珵  文浩然}}
+\cauthorno{\makebox[6.1cm][c]{20232241019 20232241392}}
 \csupervisor{\makebox[6.1cm][c]{}}
 \teacher{\makebox[6.1cm][c]{}}
 \cdate{\makebox[6.1cm][c]{\today}}
 
-% 这里默认使用最后编译的时间，也可自行给定日期，注意汉字和数字之间的空格。
-%\cdate{{\quad\;}\the\year~年~\the\month~月~\the\day~日}
-
 \cabstract{
-“摘要”是摘要部分的标题，不可省略。
+脊柱姿态异常与人体长期坐姿、站姿和运动习惯密切相关。传统脊柱姿态检测方法多依赖摄像头、可穿戴设备或专业医学检测设备，在隐私保护、长期佩戴舒适性和日常场景部署成本方面存在一定限制。为实现低侵入、非接触的室内脊柱姿态辅助检测，本文研究一种基于 WiFi 信道状态信息（Channel State Information，CSI）的三分类检测方法。
 
-标题“摘要”选用模板中的样式所定义的“标题1”，再居中；或者手动设置成字体：黑体，居中，字号：小三，1.5倍行距，段后11磅，段前为0。
+本文以 WiFi CSI 数据为基础，将脊柱姿态检测建模为正常姿态、脊柱后凸相关姿态和脊柱侧弯相关姿态的分类问题。方法首先解析原始 CSI 文件，获得时间帧、子载波和天线链路维度上的复数信道响应；随后以接收天线相位比构造相对相位特征，并沿时间维度进行相位展开；在此基础上采用长度为 512、步长为 256 的滑动窗口组织时间序列，并对每个原始文件聚合均值、标准差、分位数、相邻帧差分统计量以及相位正余弦统计量，形成 1620 维文件级特征；最后使用 ExtraTrees 集成分类器完成三类脊柱姿态识别。
 
-摘要是毕业设计（论文）的缩影，文字要简练、明确。内容要包括目的、方法、结果和结论。单位采用国际标准计量单位制，除特别情况外，数字一律用阿拉伯数码。文中不允许出现插图。重要的表格可以写入。
-
-摘要正文选用模板中的样式所定义的“正文”，每段落首行缩进2个汉字；或者手动设置成每段落首行缩进2个汉字，字体：宋体，字号：小四，行距：多倍行距 1.25，间距：段前、段后均为0行，取消网格对齐选项。
-
-摘要篇幅以一页为限，字数限500字以内。
-
-摘要正文后，列出3-5个关键词。“关键词：”是关键词部分的引导，不可省略。关键词请尽量用《汉语主题词表》等词表提供的规范词。
-
-关键词与摘要之间空一行。关键词词间用分号间隔，末尾不加标点，3-5个；黑体，小四，加粗。关键词整体字数限制在一行。
+实验使用 750 个 CSI 原始文件，三类姿态各 250 个样本，按照固定随机种子在文件级划分训练集、验证集和测试集。在 113 个测试文件上，最终模型取得 92.04\% 的准确率和 92.08\% 的宏平均 F1 值。实验结果表明，基于相位比统计特征和 ExtraTrees 分类器的 WiFi CSI 脊柱姿态检测方法能够有效区分三类姿态，为室内非接触式脊柱健康辅助检测提供了一种可行方案。
 }
 
-\ckeywords{写作规范；排版格式；毕业设计（论文）}
+\ckeywords{WiFi CSI；脊柱姿态检测；相位比；统计特征；ExtraTrees}
 
 \eabstract{
-外文摘要要求用英文书写，内容应与“中文摘要”对应。使用第三人称，最好采用现在时态编写。
+Spinal posture abnormalities are closely related to long-term sitting, standing and movement habits. Conventional spinal posture detection methods usually rely on cameras, wearable sensors or professional medical devices, which may introduce limitations in privacy protection, wearing comfort and deployment cost in daily indoor scenarios. To support low-intrusive and contactless spinal posture assessment, this thesis studies a three-class detection method based on WiFi Channel State Information (CSI).
 
-“Abstract”不可省略。标题“Abstract”选用模板中的样式所定义的“标题1”，再居中；或者手动设置成字体：Times New Roman，居中，字号：小三，多倍行距1.5倍行距，段后11磅，段前为0行。
+The proposed method formulates spinal posture detection as a classification task among normal posture, kyphosis-related posture and scoliosis-related posture. Raw CSI files are first parsed into complex channel responses over time frames, subcarriers and antenna links. Then relative phase features are constructed by calculating receive-antenna phase ratios, followed by temporal phase unwrapping. A sliding window with length 512 and step 256 is used to organize the CSI sequence. For each original file, statistical features including mean, standard deviation, quantiles, adjacent-frame difference statistics, and sine/cosine phase statistics are aggregated into a 1620-dimensional file-level feature vector. Finally, an ExtraTrees ensemble classifier is used for three-class spinal posture recognition.
 
-标题“Abstract”上方是论文的英文题目，字体：Times New Roman，居中，字号：小三，行距：多倍行距 1.25，间距：段前、段后均为0行，取消网格对齐选项。
-
-Abstract正文选用设置成每段落首行缩进2字，字体：Times New Roman，字号：小四，行距：多倍行距 1.25，间距：段前、段后均为0行，取消网格对齐选项。
-
-Key words与摘要正文之间空一行。Key words与中文“关键词”一致。词间用分号间隔，末尾不加标点，3-5个；Times New Roman，小四，加粗。
+The experiment uses 750 CSI files, with 250 samples for each posture category. The dataset is split into training, validation and test sets at the file level using a fixed random seed. On 113 test files, the final model achieves 92.04\% accuracy and 92.08\% macro F1 score. The results show that the WiFi CSI spinal posture detection method based on phase-ratio statistical features and ExtraTrees classification can effectively distinguish the three posture categories and provides a feasible solution for contactless indoor spinal health assessment.
 }
 
-\ekeywords{Write Criterion;Typeset Format;Graduation Project(Thesis)}
-\makecover 
+\ekeywords{WiFi CSI; Spinal Posture Detection; Phase Ratio; Statistical Features; ExtraTrees}
+\makecover
+
+
+
+
+

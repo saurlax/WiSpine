@@ -1,0 +1,114 @@
+﻿% !TEX TS-program = XeLaTeX
+% !TEX encoding = UTF-8 Unicode
+
+\chapter{实验设计与结果分析}
+\label{chap:experiment}
+\defaultfont
+
+\section{实验目标}
+实验部分围绕基于 WiFi CSI 的脊柱姿态检测方法展开，验证接收天线相位比、文件级统计特征和 ExtraTrees 分类器在三类姿态识别任务中的有效性。实验目标包括：检验 CSI 相位比特征是否能够反映不同脊柱姿态差异；比较 TCN、SVM、Random Forest 和 ExtraTrees 等模型的分类效果；分析最终模型在测试集上的准确率、精确率、召回率、F1 值和混淆矩阵表现。
+
+\section{数据集与划分方式}
+实验数据集共包含 750 个 CSI 原始文件，类别包括 \texttt{kyphosis}、\texttt{normal} 和 \texttt{scoliosis}，分别对应脊柱后凸相关姿态、正常姿态和脊柱侧弯相关姿态。三类样本数量均为 250 个，数据来自 5 位受试者。
+
+数据集采用固定随机种子 42 在原始文件级别进行划分。训练集包含 524 个文件，占 69.9\%；验证集包含 113 个文件，占 15.1\%；测试集包含 113 个文件，占 15.1\%。划分发生在滑动窗口生成之前，因此同一原始文件产生的重叠窗口不会同时出现在训练集和测试集中。
+
+\begin{table}[htbp]
+\centering
+\song\wuhao
+\caption{数据集划分情况}
+\label{tab:dataset_split}
+\begin{tabular}{cccc}
+\hline
+数据集 & 文件数 & 比例 & 用途 \\
+\hline
+训练集 & 524 & 69.9\% & 模型参数学习 \\
+验证集 & 113 & 15.1\% & 模型选择与配置比较 \\
+测试集 & 113 & 15.1\% & 最终性能评估 \\
+\hline
+\end{tabular}
+\end{table}
+
+\section{评价指标}
+为了全面评价模型分类效果，实验采用准确率、精确率、召回率和 F1 值作为主要指标。准确率表示预测正确的样本占总样本的比例：
+\begin{equation}
+Accuracy=\frac{TP+TN}{TP+TN+FP+FN}.
+\end{equation}
+
+精确率表示被预测为某一类别的样本中真实属于该类别的比例：
+\begin{equation}
+Precision=\frac{TP}{TP+FP}.
+\end{equation}
+
+召回率表示真实属于某一类别的样本中被正确识别的比例：
+\begin{equation}
+Recall=\frac{TP}{TP+FN}.
+\end{equation}
+
+F1 值综合衡量精确率和召回率：
+\begin{equation}
+F1=\frac{2\times Precision\times Recall}{Precision+Recall}.
+\end{equation}
+
+此外，实验使用混淆矩阵分析不同姿态类别之间的误分情况。混淆矩阵能够直观展示每个真实类别被预测为各类别的数量，有助于观察模型在哪些类别之间更容易混淆。
+
+\section{模型对比实验}
+为确定最终分类模型，本文比较了 TCN、RBF SVM、Random Forest 和 ExtraTrees 四种方案。TCN 为早期窗口级深度学习基线，输入为 512 帧 CSI 窗口；SVM、Random Forest 和 ExtraTrees 均使用文件级相位比统计特征。模型对比结果如表 4.2 所示。
+
+\begin{table}[htbp]
+\centering
+\song\wuhao
+\caption{不同模型实验结果对比}
+\label{tab:model_compare}
+\begin{tabular}{ccccc}
+\hline
+模型 & 输入单位 & 验证准确率 & 测试准确率 & 测试宏平均 F1 \\
+\hline
+TCN & 512 帧窗口 & 56.12\% & 50.30\% & 50.16\% \\
+RBF SVM & 文件统计特征 & 约 92.04\% & 约 89.38\% & -- \\
+Random Forest & 文件统计特征 & 约 96.46\% & 约 90.27\% & -- \\
+ExtraTrees & 文件统计特征 & 95.58\% & 92.04\% & 92.08\% \\
+\hline
+\end{tabular}
+\end{table}
+
+从实验结果可以看出，TCN 在当前数据规模下测试表现较低，说明仅使用窗口级深度模型难以稳定学习到可泛化的姿态差异。RBF SVM 和 Random Forest 在文件级统计特征上表现明显提升，其中 Random Forest 测试准确率已达到 90.27\%。ExtraTrees 进一步取得 92.04\% 的测试准确率和 92.08\% 的宏平均 F1 值，因此本文选用 ExtraTrees 作为最终分类模型。
+
+\section{最终测试结果}
+最终 ExtraTrees 模型在 113 个测试文件上正确分类 104 个文件，测试准确率为 92.04\%。各类别的精确率、召回率和 F1 值如表 4.3 所示。
+
+\begin{table}[htbp]
+\centering
+\song\wuhao
+\caption{ExtraTrees 模型测试集分类结果}
+\label{tab:final_result}
+\begin{tabular}{ccccc}
+\hline
+类别 & Precision & Recall & F1 & 正确数/总数 \\
+\hline
+\texttt{kyphosis} & 87.18\% & 91.89\% & 89.47\% & 34/37 \\
+\texttt{normal} & 90.00\% & 94.74\% & 92.31\% & 36/38 \\
+\texttt{scoliosis} & 100.00\% & 89.47\% & 94.44\% & 34/38 \\
+宏平均 & 92.39\% & 92.03\% & 92.08\% & 104/113 \\
+\hline
+\end{tabular}
+\end{table}
+
+混淆矩阵的类别顺序为 \texttt{kyphosis}、\texttt{normal}、\texttt{scoliosis}，结果为
+\begin{equation}
+\begin{bmatrix}
+34 & 3 & 0 \\
+2 & 36 & 0 \\
+3 & 1 & 34
+\end{bmatrix}.
+\end{equation}
+
+从混淆矩阵可见，模型对 \texttt{normal} 类别的召回率最高，在 38 个正常姿态测试文件中正确识别 36 个；对 \texttt{scoliosis} 类别的精确率达到 100.00\%，说明测试集中没有其他类别被误判为脊柱侧弯相关姿态；\texttt{kyphosis} 与另外两类之间存在少量混淆，主要表现为 3 个 \texttt{kyphosis} 文件被预测为 \texttt{normal}，以及 3 个 \texttt{scoliosis} 文件被预测为 \texttt{kyphosis}。
+
+\section{结果分析}
+实验结果表明，相位比统计特征能够较好地捕捉不同脊柱姿态对 WiFi 信道造成的差异。文件级聚合将多个窗口中的局部时间变化转化为稳定统计量，使模型能够利用完整采集文件中的整体特征进行判断。相比窗口级 TCN，ExtraTrees 在当前数据规模下具有更好的稳定性和测试集表现。
+
+ExtraTrees 的优势主要体现在三个方面。第一，树集成模型适合处理高维统计特征，不需要像神经网络一样从有限样本中重新学习大量时序表示参数。第二，ExtraTrees 的随机特征选择和随机切分阈值能够降低树之间的相关性，提高集成模型的泛化能力。第三，模型训练和推理成本较低，便于在普通 CPU 环境中完成训练、复测和部署。
+
+当前测试结果对应文件级留出测试条件，5 位受试者均出现在训练集、验证集和测试集中。因此，该结果反映的是已登记受试者在相近采集环境下的三类姿态识别能力。后续若面向完全陌生受试者部署，可进一步扩大受试者数量，并采用按受试者分组的划分方式评估跨人泛化能力。
+

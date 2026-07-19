@@ -1,4 +1,4 @@
-% !TeX program = xelatex
+﻿% !TeX program = xelatex
 \documentclass[a4paper,12pt,openany,oneside]{book}
 
 % 字体配置文件
@@ -12,30 +12,24 @@
 
 \begin{document}
 \input{preface/cover}
-\include{body/original}
-\include{body/grant}
 \frontmatter
 \pagenumbering{Roman}
 \makeabstract
 \defaultmenufont
 \tableofcontents
 
-
 \mainmatter
 
-\include{body/chap00}
-\include{body/chap01}
-\include{body/chap02}
+\include{body/intro}
+\include{body/related}
+\include{body/features}
 \include{body/chap03}
-\include{body/chap04}
-\include{body/chap05}
+\include{body/experiment}
+\include{body/implementation}
 \cleardoublepage
 
-\include{body/conclusion}
-\include{body/reference}
-\include{body/appendix1}
-\include{body/modify}
-\include{body/thank}
+\include{body/conclusion_project}
+\include{body/reference_project}
 
 \backmatter
 
