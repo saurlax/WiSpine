@@ -11,6 +11,15 @@
 \section{数据集与划分方式}
 实验数据集共包含 750 个 CSI 原始文件，类别包括 \texttt{kyphosis}、\texttt{normal} 和 \texttt{scoliosis}，分别对应脊柱后凸相关姿态、正常姿态和脊柱侧弯相关姿态。三类样本数量均为 250 个，数据来自 5 位受试者。
 
+图~\ref{fig:dataset_composition} 按受试者与姿态类别展示了原始文件构成。每位受试者在三种姿态下均采集 50 个文件，因而类别与受试者维度均保持平衡，可减少由样本数量差异造成的评价偏差。
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.88\textwidth]{figures/dataset_composition.png}
+\caption{不同受试者与姿态类别的 CSI 文件数量}
+\label{fig:dataset_composition}
+\end{figure}
+
 数据集采用固定随机种子 42 在原始文件级别进行划分。训练集包含 524 个文件，占 69.9\%；验证集包含 113 个文件，占 15.1\%；测试集包含 113 个文件，占 15.1\%。划分发生在滑动窗口生成之前，因此同一原始文件产生的重叠窗口不会同时出现在训练集和测试集中。
 
 \begin{table}[htbp]
@@ -28,6 +37,15 @@
 \hline
 \end{tabular}
 \end{table}
+
+各子集内部的类别数量如图~\ref{fig:dataset_split} 所示。训练、验证和测试子集均近似保持三类均衡，其中测试集三类文件数分别为 37、38 和 38。
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.82\textwidth]{figures/dataset_split.png}
+\caption{训练集、验证集与测试集的类别分布}
+\label{fig:dataset_split}
+\end{figure}
 
 \section{评价指标}
 为了全面评价模型分类效果，实验采用准确率、精确率、召回率和 F1 值作为主要指标。准确率表示预测正确的样本占总样本的比例：
@@ -72,6 +90,15 @@ ExtraTrees & 文件统计特征 & 95.58\% & 92.04\% & 92.08\% \\
 \end{tabular}
 \end{table}
 
+图~\ref{fig:model_comparison} 对表~\ref{tab:model_compare} 中的验证和测试准确率作了直观比较。采用文件级统计特征的三种传统模型均明显优于窗口级 TCN；ExtraTrees 的验证结果略低于 Random Forest，但取得最高的测试准确率，显示出更好的留出集泛化表现。
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.88\textwidth]{figures/model_comparison.png}
+\caption{不同分类模型的验证集与测试集准确率对比}
+\label{fig:model_comparison}
+\end{figure}
+
 从实验结果可以看出，TCN 在当前数据规模下测试表现较低，说明仅使用窗口级深度模型难以稳定学习到可泛化的姿态差异。RBF SVM 和 Random Forest 在文件级统计特征上表现明显提升，其中 Random Forest 测试准确率已达到 90.27\%。ExtraTrees 进一步取得 92.04\% 的测试准确率和 92.08\% 的宏平均 F1 值，因此本文选用 ExtraTrees 作为最终分类模型。
 
 \section{最终测试结果}
@@ -102,6 +129,13 @@ ExtraTrees & 文件统计特征 & 95.58\% & 92.04\% & 92.08\% \\
 3 & 1 & 34
 \end{bmatrix}.
 \end{equation}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.72\textwidth]{figures/extratrees_confusion_matrix.png}
+\caption{ExtraTrees 模型在测试集上的混淆矩阵}
+\label{fig:extratrees_confusion_matrix}
+\end{figure}
 
 从混淆矩阵可见，模型对 \texttt{normal} 类别的召回率最高，在 38 个正常姿态测试文件中正确识别 36 个；对 \texttt{scoliosis} 类别的精确率达到 100.00\%，说明测试集中没有其他类别被误判为脊柱侧弯相关姿态；\texttt{kyphosis} 与另外两类之间存在少量混淆，主要表现为 3 个 \texttt{kyphosis} 文件被预测为 \texttt{normal}，以及 3 个 \texttt{scoliosis} 文件被预测为 \texttt{kyphosis}。
 

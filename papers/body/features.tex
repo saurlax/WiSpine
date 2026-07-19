@@ -39,6 +39,15 @@ R_{t,s,r,m}=\frac{H_{t,s,r,m}}{H_{t,s,0,m}+\varepsilon},
 \end{equation}
 经过相位展开后，相邻时间帧之间由相位周期性造成的跳变被平滑处理，特征序列能够更稳定地表达人体姿态引起的无线信道变化。
 
+图~\ref{fig:csi_signal_example} 给出了数据集中一个正常姿态文件的实际 CSI 片段。幅度热图展示了 30 个子载波随时间的共同变化；相位比曲线则说明原始角度受 $[-\pi,\pi)$ 周期限制会出现跳变，沿时间维度展开后可获得连续轨迹，为后续差分与分位数统计提供稳定输入。
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.92\textwidth]{figures/csi_signal_example.png}
+\caption{真实 CSI 样例及接收天线相位比的时间展开效果}
+\label{fig:csi_signal_example}
+\end{figure}
+
 \section{滑动窗口组织}
 原始 CSI 文件通常包含连续采集得到的一整段时间序列，不同文件的长度可能存在差异。为了统一处理长序列，本文采用长度为 512、步长为 256 的滑动窗口切分相位比序列。设窗口长度为 $L$、滑动步长为 $P$，则第 $k$ 个窗口可表示为
 \begin{equation}
