@@ -10,8 +10,23 @@
 % 格式文件
 \input{setup/format}
 
+% Insert a completely blank physical page without advancing the visible
+% page-number sequence. This keeps selected front-matter pages single-sided
+% when the complete thesis is printed duplex.
+\newcommand{\insertblankpage}{%
+  \clearpage
+  \begingroup
+    \hypersetup{pageanchor=false}%
+    \thispagestyle{empty}%
+    \null
+    \clearpage
+  \endgroup
+  \addtocounter{page}{-1}%
+}
+
 \begin{document}
 \input{preface/cover}
+\insertblankpage
 \frontmatter
 \pagenumbering{Roman}
 \makeabstract
